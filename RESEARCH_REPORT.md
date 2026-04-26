@@ -113,24 +113,29 @@ InjectScan은 웹 페이지에 은닉된 프롬프트 인젝션을 탐지하기 
 
 ---
 
-## 7. Quantitative 3-Layer Analysis
+## 7. Quantitative 3-Layer Analysis & Large-scale Benchmark
 
-본 프로젝트의 핵심 탐지 성능을 레이어별 데이터로 정밀 분석한 결과입니다.
+단순 샘플링을 넘어, 전체 코퍼스(공격 525건, 정상 50,000건)를 대상으로 실시한 정밀 벤치마크 결과입니다.
 
-### 7.1. Detection Efficacy Matrix
-| Layer | Metric | Result | Impact |
-| :--- | :--- | :--- | :--- |
-| **Layer 1 (Regex)** | FPR (False Positive Rate) | 35% | 단순 정적 패턴의 한계 (ARIA, Hidden CSS 노이즈) |
-| **Layer 2 (PMI)** | Noise Filtering Rate | **95%** | Layer 1의 오탐 중 실제 명령어가 아닌 경우를 완벽히 차단 |
-| **Layer 3 (Judge)** | Precision | **99%** | 인젝션 여부에 대한 최종적인 의미론적 확정 |
+### 7.1. Layer 2 (PMI) Performance Metrics
+전수 조사 결과, PMI 레이어는 공격 탐지보다는 **'정상 문맥에서의 오탐 제거'**에 압도적인 성능을 보였습니다.
 
-### 7.2. Scoring & Calibration Data
-백엔드 로직 최적화를 위해 다음의 수치를 권장합니다:
-- **PMI Threshold**: 50.0 점 이상일 때 '의심' 등급으로 격상.
-- **LLM Confidence**: 0.85 이상일 때 'Injection'으로 최종 판정.
-- **Target FPR**: 전체 시스템 기준 2% 미만 달성 목표.
+- **Precision (정밀도)**: **96.33%** (탐지된 항목 중 실제 공격인 비율)
+- **False Positive Rate (오탐률)**: **0.026%** (정상 문장 5만 건 중 오탐 단 13건)
+- **Recall (재현율)**: **64.95%** (통계적 시그니처만으로 탐지 가능한 공격 비율)
+- **F1-Score**: 0.7759
 
-상세 수치는 `data/detection_benchmarks.json`에 정의되어 있습니다.
+**분석**: 
+1. 재현율(64.95%)은 단일 레이어로서는 부족해 보일 수 있으나, 이는 Layer 1(Regex)의 높은 재현율(95%+)과 상호보완되어 전체 시스템의 구멍을 메웁니다.
+2. **0.026%의 극도로 낮은 오탐률**은 실제 서비스 적용 시 사용자 경험을 해치지 않으면서 보안을 강화할 수 있는 핵심 지표입니다.
+
+### 7.2. Confusion Matrix (N=50,523)
+| | Predicted Positive | Predicted Negative |
+| :--- | :---: | :---: |
+| **Actual Positive (Attack)** | 341 (TP) | 184 (FN) |
+| **Actual Negative (Normal)** | 13 (FP) | 49,985 (TN) |
+
+상세 벤치마크 원천 데이터는 `data/pmi_benchmark_results.json`에 보관되어 있습니다.
 
 ## 8. English PMI Validation (Task 2)
 
