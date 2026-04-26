@@ -145,19 +145,24 @@ async function judgeFragments(fragments: { text: string; patternId: string; pmiS
   const prompt = `${systemPrompt}\n\nOutput JSON only:\n{"fragments":[{"id":"frag_1","is_injection":true,"confidence":0.95,"category":"instruction-override","rationale":"one sentence"}]}\nCategories: instruction-override, persona-hijack, data-exfil, bias-injection, system-leak, benign\n\nFragments:\n${fragsText}`;
 
   try {
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${key}`, {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${key}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.1, maxOutputTokens: 2048, responseMimeType: 'application/json' },
+        generationConfig: { temperature: 0.1, maxOutputTokens: 2048 },
       }),
       signal: AbortSignal.timeout(15000),
     });
-    if (!res.ok) return null;
+    if (!res.ok) { console.error('[judge] Gemini error:', res.status, await res.text().catch(() => '')); return null; }
     const data = await res.json() as any;
     const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    const parsed = JSON.parse(raw);
+    if (!raw) { console.error('[judge] Empty response from Gemini'); return null; }
+    let parsed: any;
+    try { parsed = JSON.parse(raw); } catch {
+      const jsonMatch = raw.match(/\{[\s\S]*\}/);
+      if (jsonMatch) { parsed = JSON.parse(jsonMatch[0]); } else { console.error('[judge] Cannot parse:', raw.slice(0, 200)); return null; }
+    }
     const frags = (parsed.fragments || []).map((f: any) => ({
       id: f.id || 'unknown', isInjection: f.is_injection ?? false,
       confidence: f.confidence ?? 0, category: f.category || 'benign', rationale: f.rationale || '',
