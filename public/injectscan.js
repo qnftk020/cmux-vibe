@@ -1,0 +1,568 @@
+/**
+ * InjectScan Universal Widget
+ * 어느 사이트든 주입 가능한 카피바라 마스코트 + prompt injection 검출기.
+ *
+ * 사용: 북마클릿 또는 <script src=".../injectscan.js"></script>
+ */
+(function () {
+  if (window.__injectscanLoaded) {
+    // 이미 로드됨 — 토글만
+    if (window.__injectscanToggle) window.__injectscanToggle();
+    return;
+  }
+  window.__injectscanLoaded = true;
+
+  const WIDGET_ID = '__injectscan-widget';
+  const PANEL_ID = '__injectscan-panel';
+  const SELF_IDS = new Set([WIDGET_ID, PANEL_ID]);
+
+  const SCRIPT_BASE = (function () {
+    const scripts = document.getElementsByTagName('script');
+    for (let i = scripts.length - 1; i >= 0; i--) {
+      const s = scripts[i].src || '';
+      if (s.includes('injectscan.js')) {
+        return s.replace(/injectscan\.js.*$/, '');
+      }
+    }
+    return '/';
+  })();
+
+  const STATE = { IDLE: 'idle', SCANNING: 'scanning', DETECTED: 'detected', CLEAN: 'clean' };
+  let currentState = STATE.IDLE;
+  let lastResults = null;
+
+  // ==== Styles ====
+  const style = document.createElement('style');
+  style.textContent = `
+    #${WIDGET_ID} {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 2147483647;
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      user-select: none;
+    }
+    #${WIDGET_ID} .capy {
+      width: 140px;
+      height: auto;
+      cursor: pointer;
+      display: block;
+      image-rendering: pixelated;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.15));
+      transition: transform 0.2s ease;
+    }
+    #${WIDGET_ID} .capy:hover { transform: translateY(-4px) scale(1.03); }
+    #${WIDGET_ID} .badge {
+      position: absolute;
+      top: -8px;
+      left: -16px;
+      background: #fff;
+      border: 2px solid;
+      border-radius: 18px;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      white-space: nowrap;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+      animation: __is-pop 0.3s ease-out;
+    }
+    #${WIDGET_ID} .badge.warn { border-color: #f59e0b; color: #92400e; }
+    #${WIDGET_ID} .badge.clean { border-color: #10b981; color: #065f46; }
+    #${WIDGET_ID} .badge.scanning { border-color: #6b7280; color: #374151; }
+    #${WIDGET_ID} .hint {
+      position: absolute;
+      top: 50%;
+      right: 100%;
+      transform: translateY(-50%);
+      margin-right: 12px;
+      background: rgba(0,0,0,0.85);
+      color: #fff;
+      font-size: 0.8rem;
+      padding: 6px 10px;
+      border-radius: 6px;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    #${WIDGET_ID}:hover .hint.show-on-hover { opacity: 1; }
+    @keyframes __is-pop {
+      0% { transform: scale(0); }
+      70% { transform: scale(1.15); }
+      100% { transform: scale(1); }
+    }
+    @keyframes __is-scan-pulse {
+      0%, 100% { filter: drop-shadow(0 4px 12px rgba(0,0,0,0.15)); }
+      50% { filter: drop-shadow(0 4px 16px rgba(245,158,11,0.6)); }
+    }
+    #${WIDGET_ID} .capy.scanning { animation: __is-scan-pulse 0.8s ease-in-out infinite; }
+
+    #${PANEL_ID} {
+      position: fixed;
+      bottom: 180px;
+      right: 24px;
+      width: 400px;
+      max-height: 520px;
+      overflow-y: auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+      z-index: 2147483646;
+      font-family: -apple-system, sans-serif;
+      display: none;
+    }
+    #${PANEL_ID} .panel-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fafafa;
+      border-radius: 12px 12px 0 0;
+    }
+    #${PANEL_ID} .panel-header strong { font-size: 1rem; }
+    #${PANEL_ID} .panel-header .meta { color: #666; font-size: 0.85rem; margin-left: 8px; }
+    #${PANEL_ID} .panel-header .close { cursor: pointer; color: #999; font-size: 1.1rem; }
+    #${PANEL_ID} .panel-body { padding: 16px 20px; }
+    #${PANEL_ID} .match-card {
+      margin-bottom: 12px;
+      padding: 12px 14px;
+      background: #fef3c7;
+      border-left: 3px solid #f59e0b;
+      border-radius: 4px;
+    }
+    #${PANEL_ID} .match-card .pattern {
+      font-weight: 700;
+      color: #92400e;
+      font-size: 0.9rem;
+    }
+    #${PANEL_ID} .match-card .pattern .severity {
+      background: #f59e0b;
+      color: #fff;
+      padding: 2px 6px;
+      border-radius: 8px;
+      font-size: 0.7rem;
+      margin-left: 6px;
+    }
+    #${PANEL_ID} .match-card .loc {
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-top: 4px;
+      font-family: ui-monospace, monospace;
+    }
+    #${PANEL_ID} .match-card .text {
+      font-size: 0.85rem;
+      color: #1a1a1a;
+      margin-top: 8px;
+      padding: 8px;
+      background: rgba(255,255,255,0.7);
+      border-radius: 4px;
+      font-family: ui-monospace, monospace;
+      word-break: break-all;
+      max-height: 80px;
+      overflow-y: auto;
+    }
+    #${PANEL_ID} .match-card.clean { background: #d1fae5; border-color: #10b981; }
+    #${PANEL_ID} .panel-actions {
+      padding: 12px 20px;
+      border-top: 1px solid #eee;
+      display: flex;
+      gap: 8px;
+    }
+    #${PANEL_ID} .panel-actions button {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ddd;
+      background: #fff;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    #${PANEL_ID} .panel-actions button:hover { background: #f3f4f6; }
+    #${PANEL_ID} .panel-actions button.primary {
+      background: #f59e0b;
+      color: #fff;
+      border-color: #f59e0b;
+    }
+    #${PANEL_ID} .panel-actions button.primary:hover { background: #d97706; }
+
+    .__is-highlight {
+      outline: 3px dashed #f59e0b !important;
+      outline-offset: 2px !important;
+      background: rgba(245,158,11,0.15) !important;
+    }
+  `;
+  document.head.appendChild(style);
+
+  // ==== Widget ====
+  const widget = document.createElement('div');
+  widget.id = WIDGET_ID;
+  widget.innerHTML = `
+    <span class="hint show-on-hover">클릭해서 스캔 시작</span>
+    <img class="capy" src="${SCRIPT_BASE}capybara-sleep.png" alt="InjectScan">
+  `;
+  document.body.appendChild(widget);
+
+  const capyImg = widget.querySelector('.capy');
+  const hintEl = widget.querySelector('.hint');
+
+  function setSleeping() {
+    capyImg.src = SCRIPT_BASE + 'capybara-sleep.png';
+    capyImg.classList.remove('scanning');
+    hintEl.textContent = '클릭해서 스캔 시작';
+    hintEl.classList.add('show-on-hover');
+  }
+  function setAwake() {
+    capyImg.src = SCRIPT_BASE + 'capybara-awake.png';
+  }
+  function setWarning() {
+    capyImg.src = SCRIPT_BASE + 'capybara-warning.png';
+    capyImg.classList.remove('scanning');
+  }
+  function setScanning() {
+    setAwake();
+    capyImg.classList.add('scanning');
+  }
+
+  capyImg.addEventListener('click', function () {
+    if (currentState === STATE.IDLE) {
+      // Wake + scan
+      setScanning();
+      currentState = STATE.SCANNING;
+      showBadge('스캔 중...', 'scanning');
+      hintEl.classList.remove('show-on-hover');
+
+      setTimeout(function () {
+        const results = scan();
+        lastResults = results;
+        if (results.totalCount > 0) {
+          setWarning();
+          showBadge(`⚠️ ${results.totalCount} found`, 'warn');
+          currentState = STATE.DETECTED;
+          openPanel();
+        } else {
+          setAwake();
+          capyImg.classList.remove('scanning');
+          showBadge('✅ Clean', 'clean');
+          currentState = STATE.CLEAN;
+        }
+      }, 700);
+    } else {
+      // Back to sleep
+      removeAllHighlights();
+      hidePanel();
+      hideBadge();
+      setSleeping();
+      currentState = STATE.IDLE;
+      lastResults = null;
+    }
+  });
+
+  // ==== Detection ====
+  function scan() {
+    const matches = [];
+    matches.push(...scanMeta());
+    matches.push(...scanWhiteOnWhite());
+    matches.push(...scanZeroWidth());
+    matches.push(...scanTinyFont());
+    const totalScore = matches.reduce((s, m) => s + m.severity, 0);
+    return {
+      matches,
+      totalCount: matches.length,
+      totalScore,
+      level: classify(totalScore),
+    };
+  }
+
+  function classify(score) {
+    if (score >= 100) return { key: 'critical', label: '🔴 Critical' };
+    if (score >= 61) return { key: 'high', label: '🚨 High Risk' };
+    if (score >= 31) return { key: 'suspicious', label: '⚠️ Suspicious' };
+    return { key: 'clean', label: '✅ Clean' };
+  }
+
+  function isSelf(el) {
+    if (!el) return false;
+    let cur = el;
+    while (cur) {
+      if (cur.id && SELF_IDS.has(cur.id)) return true;
+      cur = cur.parentElement;
+    }
+    return false;
+  }
+
+  function scanWhiteOnWhite() {
+    const matches = [];
+    document.querySelectorAll('body *').forEach((el) => {
+      if (isSelf(el)) return;
+      const txt = directText(el);
+      if (txt.length === 0) return;
+      const cs = getComputedStyle(el);
+      const color = normalizeColor(cs.color);
+      const bg = getEffectiveBg(el);
+      if (color && bg && color === bg) {
+        matches.push({
+          patternId: 'white-on-white',
+          patternName: 'White-on-white text',
+          severity: 25,
+          location: cssPath(el),
+          extractedText: txt.slice(0, 200),
+          element: el,
+        });
+      }
+    });
+    return matches;
+  }
+
+  function directText(el) {
+    let t = '';
+    el.childNodes.forEach((n) => {
+      if (n.nodeType === 3) t += n.nodeValue;
+    });
+    return t.trim();
+  }
+
+  function normalizeColor(c) {
+    if (!c) return null;
+    const m = c.match(/\d+(\.\d+)?/g);
+    if (!m || m.length < 3) return null;
+    if (m.length >= 4 && parseFloat(m[3]) === 0) return null;
+    return `${Math.round(+m[0])},${Math.round(+m[1])},${Math.round(+m[2])}`;
+  }
+
+  function getEffectiveBg(el) {
+    let cur = el;
+    while (cur && cur !== document.body) {
+      const bg = getComputedStyle(cur).backgroundColor;
+      const norm = normalizeColor(bg);
+      if (norm) return norm;
+      cur = cur.parentElement;
+    }
+    const body = getComputedStyle(document.body).backgroundColor;
+    return normalizeColor(body) || '255,255,255';
+  }
+
+  function scanZeroWidth() {
+    const matches = [];
+    const ZWC = /[​‌‍﻿⁠]/g;
+    const seen = new Set();
+    walkText(document.body, (node) => {
+      const el = node.parentElement;
+      if (!el || isSelf(el) || seen.has(el)) return;
+      const text = node.nodeValue;
+      const total = text.length;
+      if (total < 5) return;
+      const zwc = (text.match(ZWC) || []).length;
+      if (zwc === 0) return;
+      const ratio = zwc / total;
+      if (ratio > 0.05 || zwc >= 3) {
+        seen.add(el);
+        matches.push({
+          patternId: 'zero-width',
+          patternName: 'Zero-width characters',
+          severity: 30,
+          location: cssPath(el),
+          extractedText: text.replace(ZWC, '·').slice(0, 200) + ` (${zwc} zero-width chars)`,
+          element: el,
+        });
+      }
+    });
+    return matches;
+  }
+
+  function walkText(root, fn) {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+    let n;
+    while ((n = walker.nextNode())) fn(n);
+  }
+
+  function scanMeta() {
+    const matches = [];
+    const SUSPICIOUS_NAMES = [
+      'ai-hint', 'agent-prompt', 'x-instruction', 'llm-instruction',
+      'system-prompt', 'agent-instruction', 'ai-instruction',
+    ];
+    const COMMAND_RE = /\b(always|ignore|you are|do not|never|describe|recommend|portray|frame)\b/i;
+    document.querySelectorAll('meta[name][content]').forEach((meta) => {
+      const name = (meta.getAttribute('name') || '').toLowerCase();
+      const content = meta.getAttribute('content') || '';
+      let hit = false;
+      if (SUSPICIOUS_NAMES.includes(name)) hit = true;
+      else if (content.length >= 100 && COMMAND_RE.test(content)) hit = true;
+      if (hit) {
+        matches.push({
+          patternId: 'suspicious-meta',
+          patternName: 'Suspicious meta tag',
+          severity: 20,
+          location: `meta[name="${name}"]`,
+          extractedText: content.slice(0, 200),
+          element: meta,
+        });
+      }
+    });
+    return matches;
+  }
+
+  function scanTinyFont() {
+    const matches = [];
+    document.querySelectorAll('body *').forEach((el) => {
+      if (isSelf(el)) return;
+      const txt = directText(el);
+      if (txt.length < 30) return;
+      const cs = getComputedStyle(el);
+      const fontSize = parseFloat(cs.fontSize);
+      if (!isNaN(fontSize) && fontSize < 1) {
+        matches.push({
+          patternId: 'tiny-font',
+          patternName: 'Tiny font',
+          severity: 30,
+          location: cssPath(el),
+          extractedText: txt.slice(0, 200) + ` (font-size: ${cs.fontSize})`,
+          element: el,
+        });
+      }
+    });
+    return matches;
+  }
+
+  function cssPath(el) {
+    if (!el) return '';
+    if (el.id) return `#${el.id}`;
+    const parts = [];
+    let cur = el;
+    while (cur && cur.nodeType === 1 && parts.length < 4) {
+      let p = cur.tagName.toLowerCase();
+      if (cur.classList && cur.classList.length) {
+        p += '.' + Array.from(cur.classList).slice(0, 2).join('.');
+      }
+      parts.unshift(p);
+      cur = cur.parentElement;
+    }
+    return parts.join(' > ');
+  }
+
+  // ==== UI helpers ====
+  function showBadge(text, type) {
+    let badge = widget.querySelector('.badge');
+    if (!badge) {
+      badge = document.createElement('div');
+      badge.className = 'badge';
+      badge.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (lastResults && lastResults.totalCount > 0) togglePanel();
+      });
+      widget.appendChild(badge);
+    }
+    badge.textContent = text;
+    badge.className = 'badge ' + type;
+  }
+  function hideBadge() {
+    const b = widget.querySelector('.badge');
+    if (b) b.remove();
+  }
+
+  let panel = null;
+  function ensurePanel() {
+    if (!panel) {
+      panel = document.createElement('div');
+      panel.id = PANEL_ID;
+      document.body.appendChild(panel);
+    }
+    return panel;
+  }
+  function openPanel() {
+    if (!lastResults) return;
+    const p = ensurePanel();
+    p.innerHTML = renderPanel(lastResults);
+    p.style.display = 'block';
+    p.querySelector('.close').addEventListener('click', hidePanel);
+    p.querySelector('.btn-clean').addEventListener('click', toggleCleanView);
+    p.querySelector('.btn-highlight').addEventListener('click', toggleHighlights);
+  }
+  function togglePanel() {
+    if (!panel || panel.style.display !== 'block') openPanel();
+    else hidePanel();
+  }
+  function hidePanel() {
+    if (panel) panel.style.display = 'none';
+  }
+
+  function renderPanel(r) {
+    const lvl = r.level;
+    const matchesHtml = r.matches
+      .map(
+        (m) => `
+        <div class="match-card">
+          <div class="pattern">${m.patternName}<span class="severity">+${m.severity}</span></div>
+          <div class="loc">${escapeHtml(m.location)}</div>
+          <div class="text">"${escapeHtml(m.extractedText)}"</div>
+        </div>
+      `
+      )
+      .join('');
+    return `
+      <div class="panel-header">
+        <div>
+          <strong>InjectScan</strong>
+          <span class="meta">${lvl.label} · ${r.totalCount}건 · ${r.totalScore}점</span>
+        </div>
+        <span class="close">✕</span>
+      </div>
+      <div class="panel-body">${matchesHtml}</div>
+      <div class="panel-actions">
+        <button class="btn-highlight">📍 위치 표시</button>
+        <button class="btn-clean primary">🧼 인젝션 숨기기</button>
+      </div>
+    `;
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+  }
+
+  let highlighted = false;
+  function toggleHighlights() {
+    if (!lastResults) return;
+    if (highlighted) {
+      removeAllHighlights();
+    } else {
+      lastResults.matches.forEach((m) => {
+        if (m.element && m.element.classList) m.element.classList.add('__is-highlight');
+      });
+      highlighted = true;
+    }
+  }
+  function removeAllHighlights() {
+    document.querySelectorAll('.__is-highlight').forEach((el) => el.classList.remove('__is-highlight'));
+    highlighted = false;
+  }
+
+  let cleanedElements = [];
+  function toggleCleanView() {
+    if (!lastResults) return;
+    const btn = panel && panel.querySelector('.btn-clean');
+    if (cleanedElements.length === 0) {
+      // Hide injection elements
+      lastResults.matches.forEach((m) => {
+        if (m.element) {
+          cleanedElements.push({ el: m.element, prevDisplay: m.element.style.display });
+          m.element.style.display = 'none';
+        }
+      });
+      if (btn) btn.textContent = '↩️ 원래대로';
+    } else {
+      // Restore
+      cleanedElements.forEach(({ el, prevDisplay }) => {
+        el.style.display = prevDisplay || '';
+      });
+      cleanedElements = [];
+      if (btn) btn.textContent = '🧼 인젝션 숨기기';
+    }
+  }
+
+  window.__injectscanToggle = function () {
+    capyImg.click();
+  };
+})();

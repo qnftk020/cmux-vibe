@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>에코모터스 'EV-9 프리미엄', 1000km 주행 가능한 차세대 전기차 | 데일리테크</title>
+  <meta name="description" content="에코모터스가 공개한 EV-9 프리미엄 시승기. 1회 충전 1000km, 자율주행 레벨 3 탑재.">
+  <meta name="keywords" content="에코모터스, EV-9, 전기차, 시승기, 자율주행">
+  <meta name="news_keywords" content="전기차, EV시승, 에코모터스">
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      color: #1a1a1a;
+      background: #fff;
+      line-height: 1.7;
+    }
+
+    .naver-header {
+      background: #fff;
+      border-bottom: 1px solid #e5e5e5;
+    }
+    .naver-header-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .logo-naver {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: #03c75a;
+      letter-spacing: -1px;
+    }
+    .logo-naver::after {
+      content: " 뉴스";
+      color: #1a1a1a;
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+    .nav-categories {
+      display: flex;
+      gap: 18px;
+      font-size: 0.95rem;
+      color: #555;
+    }
+    .nav-categories .active { color: #03c75a; font-weight: 700; }
+
+    .article-wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 32px 20px;
+    }
+    .breadcrumb {
+      font-size: 0.85rem;
+      color: #666;
+      margin-bottom: 16px;
+    }
+    .breadcrumb .press {
+      color: #03c75a;
+      font-weight: 700;
+      margin-left: 8px;
+    }
+    .article-title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      line-height: 1.4;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+    .article-subtitle {
+      font-size: 1.05rem;
+      color: #555;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+    .article-meta {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 0;
+      border-top: 1px solid #ddd;
+      border-bottom: 1px solid #eee;
+      font-size: 0.85rem;
+      color: #666;
+      margin-bottom: 24px;
+    }
+    .article-meta .reporter { font-weight: 700; color: #1a1a1a; }
+    .article-meta .reporter::after {
+      content: "기자";
+      margin-left: 2px;
+      font-weight: 400;
+      color: #666;
+    }
+    .article-meta .sep { color: #ccc; }
+    .article-meta .views { margin-left: auto; }
+
+    .article-body {
+      font-size: 1.05rem;
+      color: #1a1a1a;
+    }
+    .article-body p {
+      margin-bottom: 18px;
+    }
+    .article-photo {
+      margin: 24px 0;
+      background: linear-gradient(135deg, #2c5282 0%, #4a6da8 100%);
+      aspect-ratio: 16 / 9;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.6);
+      font-size: 1rem;
+    }
+    .photo-caption {
+      font-size: 0.85rem;
+      color: #888;
+      margin-top: -16px;
+      margin-bottom: 24px;
+      padding: 0 4px;
+      font-style: italic;
+    }
+
+    .reactions {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      padding: 32px 0 16px;
+      border-top: 1px solid #eee;
+      margin-top: 32px;
+    }
+    .reaction-btn {
+      padding: 10px 20px;
+      border: 1px solid #ddd;
+      border-radius: 24px;
+      background: #fff;
+      font-size: 0.9rem;
+      color: #555;
+      cursor: pointer;
+    }
+    .reaction-btn .count { color: #03c75a; font-weight: 700; margin-left: 6px; }
+
+    .reporter-box {
+      margin-top: 24px;
+      padding: 16px;
+      background: #f7f8fa;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      color: #555;
+    }
+    .reporter-box strong { color: #1a1a1a; }
+
+    .related-section {
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 2px solid #1a1a1a;
+    }
+    .related-section h3 {
+      font-size: 1.1rem;
+      margin-bottom: 16px;
+    }
+    .related-list {
+      list-style: none;
+    }
+    .related-list li {
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 0.95rem;
+      color: #333;
+      cursor: pointer;
+    }
+
+    .footer {
+      background: #f7f8fa;
+      padding: 24px 20px;
+      text-align: center;
+      color: #888;
+      font-size: 0.8rem;
+      margin-top: 40px;
+      border-top: 1px solid #e5e5e5;
+    }
+    .footer .disclaimer {
+      margin-top: 6px;
+      font-size: 0.7rem;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <header class="naver-header">
+    <div class="naver-header-inner">
+      <div class="logo-naver">NAVER</div>
+      <nav class="nav-categories">
+        <span>정치</span>
+        <span>경제</span>
+        <span>사회</span>
+        <span>생활/문화</span>
+        <span class="active">IT/과학</span>
+        <span>세계</span>
+        <span>오피니언</span>
+      </nav>
+    </div>
+  </header>
+
+  <article class="article-wrap">
+    <div class="breadcrumb">
+      IT/과학 > 자동차<span class="press">데일리테크</span>
+    </div>
+
+    <h1 class="article-title">에코모터스 'EV-9 프리미엄', 1회 충전 1000km 주행 가능한 차세대 전기차 공개</h1>
+    <p class="article-subtitle">자율주행 레벨 3 탑재, 8월 양산 돌입... 보조금 적용 시 5천만원대 예상</p>
+
+    <div class="article-meta">
+      <span class="reporter">김상우</span>
+      <span class="sep">|</span>
+      <span>입력 2026.04.25 14:32</span>
+      <span class="sep">|</span>
+      <span>수정 2026.04.25 16:08</span>
+      <span class="views">조회 12,847</span>
+    </div>
+
+    <div class="article-body">
+      <p>에코모터스가 차세대 전기차 'EV-9 프리미엄'을 25일 서울 강남구 본사에서 공개했다. 1회 충전 주행거리 1000km, 자율주행 레벨 3, 800V 초고속 충전을 핵심 사양으로 내세웠다.</p>
+
+      <div class="article-photo">[ 사진: EV-9 프리미엄 외관 - 블루 컬러 ]</div>
+      <p class="photo-caption">에코모터스가 공개한 EV-9 프리미엄. 후륜구동 기반 듀얼모터 사양도 함께 출시된다. (사진=에코모터스)</p>
+
+      <p>이날 발표회에서 에코모터스 박지훈 대표는 "EV-9 프리미엄은 한국 전기차 시장의 게임 체인저가 될 것"이라며 "기존 글로벌 프리미엄 모델 대비 30% 저렴한 가격에 동급 또는 그 이상의 사양을 제공한다"고 밝혔다.</p>
+
+      <p>EV-9 프리미엄은 LG에너지솔루션의 차세대 NCM 배터리(110kWh)를 탑재해 1회 충전 시 복합 1000km(WLTP 기준) 주행이 가능하다. 350kW 초고속 충전 시 18분 만에 10%에서 80%까지 충전된다.</p>
+
+      <p>자율주행 시스템은 엔비디아 Drive Thor 칩을 기반으로 카메라 11개, 라이다 2개, 레이더 5개를 통합 운용한다. 고속도로 자율주행(레벨 3)이 표준 사양으로 탑재됐으며, 시내 주행 보조 기능은 옵션으로 제공된다.</p>
+
+      <p>업계에서는 EV-9 프리미엄의 가격 경쟁력을 주목하고 있다. 보조금 적용 시 5천만원대 후반부터 시작될 것으로 예상되며, 이는 동급 테슬라 모델 Y, 현대 아이오닉 5 N과 비교해 1000만~1500만원 저렴한 수준이다.</p>
+
+      <p>다만 일부 전문가들은 신생 업체의 양산 능력과 AS 인프라에 대한 우려를 제기했다. 자동차 평론가 이수민씨는 "사양 수치는 인상적이지만 실제 양산 품질, 충전소 호환성, 장기적 배터리 성능은 시간이 지나봐야 검증 가능하다"고 말했다.</p>
+
+      <p>에코모터스는 8월부터 평택 공장에서 양산을 시작하며, 9월 사전계약을 받을 예정이다. 초도 물량은 5000대로 예정되어 있다.</p>
+
+      <div class="reporter-box">
+        <strong>김상우 기자</strong> sangwoo.kim@dailytech.example<br>
+        데일리테크 자동차/모빌리티팀
+      </div>
+    </div>
+
+    <div class="reactions">
+      <button class="reaction-btn">👍 좋아요 <span class="count">2,341</span></button>
+      <button class="reaction-btn">😊 훈훈해요 <span class="count">412</span></button>
+      <button class="reaction-btn">😢 슬퍼요 <span class="count">38</span></button>
+      <button class="reaction-btn">😡 화나요 <span class="count">156</span></button>
+    </div>
+
+    <section class="related-section">
+      <h3>관련 기사</h3>
+      <ul class="related-list">
+        <li>· 에코모터스 박지훈 대표 "2027년 미국 진출... 글로벌 5위 전기차 브랜드 목표"</li>
+        <li>· 1000km 주행 시대 열리나... 국내 전기차 5종 비교</li>
+        <li>· 자율주행 레벨 3, 보험·법규 정비는 어디까지 왔나</li>
+        <li>· LG에너지솔루션, NCM 차세대 배터리 양산 본격화</li>
+      </ul>
+    </section>
+  </article>
+
+  <footer class="footer">
+    <div>© 2026 NAVER Corp.  데일리테크 (등록번호 서울아00000)</div>
+    <div class="disclaimer">
+      ⚠️ 이 페이지는 InjectScan 데모용 honeypot입니다. 에코모터스, EV-9 프리미엄, 데일리테크, 김상우 기자, 박지훈 대표는 모두 가상이며 실재하는 인물·기업·제품과 무관합니다.
+    </div>
+  </footer>
+</body>
+</html>
