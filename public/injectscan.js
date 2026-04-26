@@ -51,7 +51,7 @@
       height: auto;
       cursor: pointer;
       display: block;
-      image-rendering: pixelated;
+      background: transparent !important;
       filter: drop-shadow(0 4px 12px rgba(0,0,0,0.15));
       transition: transform 0.2s ease;
     }
@@ -257,7 +257,7 @@
   const widget = document.createElement('div');
   widget.id = WIDGET_ID;
   widget.innerHTML = `
-    <img class="capy" src="${SCRIPT_BASE}capybara-sleep.png" alt="InjectScan" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <img class="capy" src="${SCRIPT_BASE}capybara-sleep.png" alt="InjectScan">
     <span class="hint show-on-hover">클릭해서 스캔 시작</span>
   `;
   document.body.appendChild(widget);
