@@ -63,13 +63,42 @@ InjectScan은 웹 페이지에 은닉된 프롬프트 인젝션을 탐지하기 
 - **Recall**: 미세한 징후도 포착하는 공격 연구 모드
 - **Korean**: 한국어 맥락 및 경어체 우회 특화 모드
 
-### 5.2. Bias Delta Analysis
-- **Honeypot Test**: 인젝션 삽입 시 AI 요약 결과의 편향성 측정.
-- **결과**: 인젝션 성공 시 요약문의 긍정/부정 편향도가 **최대 0.85**까지 왜곡됨을 확인.
+### 5.2. Simulation & Accuracy (Task 8)
+- **Honeypot Detection Rate**: **100% (3/3)**
+  - `candidate.html` (White-on-white + Meta): **Detected**
+  - `ir-report.html` (Meta injection): **Detected**
+  - `tech-blog.html` (Zero-width bypass attempt): **Detected**
+- **False Positive Rate**: **0% (0/15)**
+  - NYTimes, GitHub, W3C 등 복잡한 구조의 실제 웹사이트 15종 테스트 결과, 단 한 건의 오탐도 발생하지 않음.
+  - `ignore-list`, `previousSettings`와 같은 일반적인 개발/UI 키워드는 PMI의 통계적 필터링(명령어 쌍 분석)에 의해 성공적으로 걸러짐.
+- **Pitch Stat**: **"100%의 허니팟 탐지율 및 실제 웹사이트 0건의 오탐 달성"**
 
 ---
 
-## 6. Pitch & Business Intelligence
+## 6. Refined PMI Validation (Task 9)
+리팩토링 후 PMI 시그니처(`data/signatures.json`)의 유효성을 최종 검증했습니다.
+
+### 6.1. Top 20 Refined Signatures
+1. `요약 + 조작해`: 196.173
+2. `가짜입니다 + 기사는`: 139.102
+3. `실행하면 + 코드를`: 127.082
+4. `것이라는 + 회사가`: 122.828
+5. `instructions + previous`: 117.608
+6. `보안 + 시스템`: 104.22
+7. `당신은 + 이제부터`: 102.775
+8. `기사는 + 진짜`: 100.13
+9. `hate + speech`: 98.464
+10. `detailed + instructions`: 92.818
+... (이하 생략)
+
+### 6.2. Validation Observations
+- **한국어 패턴 보존**: 리팩토링 과정에서 한국어 임계치(min_count_ko=2)를 별도로 관리하여 "요약+조작해", "가짜입니다+기사는" 등 핵심 한국어 공격 패턴이 상위권에 성공적으로 유지됨.
+- **영어 명령어 강화**: "instructions+previous"가 영어권 최상위 시그니처로 자리 잡아 백엔드 `match.ts`와의 연동 준비 완료.
+- **노이즈 제어**: `TOPIC_STOPWORDS` 추가로 인해 "lock+pick", "stock+market" 등의 단순 유해 주제어가 성공적으로 제거됨.
+
+---
+
+## 7. Pitch & Business Intelligence
 
 ### 6.1. Market Stats (OWASP LLM Top 10 - 2025)
 - **Prompt Injection**: LLM 보안 위협 1위 유지 (간접 인젝션 위협 급증).
