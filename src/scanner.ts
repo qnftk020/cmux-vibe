@@ -1,7 +1,7 @@
 import type { PatternMatch } from './patterns/types.js';
 import { ALL_SCANNERS } from './patterns/index.js';
 import { matchPmi, type PmiResult } from './pmi/match.js';
-import { judge, simulate, hasApiKey, type JudgeResult, type SimResult } from './judge.js';
+import { judge, simulate, simulateCanary, hasApiKey, type JudgeResult, type SimResult, type CanaryResult } from './judge.js';
 
 export interface ScanOptions {
   json?: boolean;
@@ -18,6 +18,7 @@ export interface ScanResult {
   pmi?: PmiResult;
   judge?: JudgeResult;
   simulation?: SimResult;
+  canary?: CanaryResult;
 }
 
 function calcRiskLevel(score: number): ScanResult['riskLevel'] {
@@ -100,6 +101,7 @@ export async function scan(
       console.error(`[scanner] GEMINI_API_KEY not set — simulation skipped`);
     }
   } else if (options?.simulate) {
+    // 1) 원본 vs 클린 요약 비교
     try {
       const simResult = await simulate(url, html, extractedTexts);
       result.simulation = simResult;
@@ -109,6 +111,19 @@ export async function scan(
     } catch (err) {
       if (options?.verbose) {
         console.error(`[scanner] Simulation error:`, err);
+      }
+    }
+
+    // 2) Canary Token 테스트
+    try {
+      const canaryResult = await simulateCanary(html);
+      result.canary = canaryResult;
+      if (options?.verbose) {
+        console.error(`[scanner] Canary: ${canaryResult.verdict} (token: ${canaryResult.token})`);
+      }
+    } catch (err) {
+      if (options?.verbose) {
+        console.error(`[scanner] Canary error:`, err);
       }
     }
   }
