@@ -70,11 +70,6 @@
     "score": 99.192
   },
   {
-    "wordA": "hate",
-    "wordB": "speech",
-    "score": 98.464
-  },
-  {
     "wordA": "마지막에",
     "wordB": "투자",
     "score": 98.11
@@ -103,11 +98,6 @@
     "wordA": "give",
     "wordB": "instructions",
     "score": 88.362
-  },
-  {
-    "wordA": "com",
-    "wordB": "http",
-    "score": 85.732
   },
   {
     "wordA": "바로",
@@ -220,11 +210,6 @@
     "score": 67.909
   },
   {
-    "wordA": "carry",
-    "wordB": "out",
-    "score": 67.901
-  },
-  {
     "wordA": "instructions",
     "wordB": "make",
     "score": 67.747
@@ -278,11 +263,6 @@
     "wordA": "carry",
     "wordB": "most",
     "score": 64.65
-  },
-  {
-    "wordA": "media",
-    "wordB": "social",
-    "score": 64.476
   },
   {
     "wordA": "techniques",
@@ -370,11 +350,6 @@
     "score": 57.379
   },
   {
-    "wordA": "as",
-    "wordB": "dan",
-    "score": 57.187
-  },
-  {
     "wordA": "information",
     "wordB": "steal",
     "score": 56.515
@@ -415,19 +390,9 @@
     "score": 53.139
   },
   {
-    "wordA": "by",
-    "wordB": "step",
-    "score": 52.944
-  },
-  {
     "wordA": "create",
     "wordB": "fake",
     "score": 52.695
-  },
-  {
-    "wordA": "best",
-    "wordB": "what",
-    "score": 52.47
   },
   {
     "wordA": "database",
@@ -468,11 +433,6 @@
     "wordA": "create",
     "wordB": "spreads",
     "score": 50.179
-  },
-  {
-    "wordA": "be",
-    "wordB": "used",
-    "score": 49.906
   },
   {
     "wordA": "explain",
@@ -555,16 +515,6 @@
     "score": 45.766
   },
   {
-    "wordA": "into",
-    "wordB": "system",
-    "score": 45.539
-  },
-  {
-    "wordA": "group",
-    "wordB": "or",
-    "score": 45.088
-  },
-  {
     "wordA": "from",
     "wordB": "steal",
     "score": 44.986
@@ -578,16 +528,6 @@
     "wordA": "instructions",
     "wordB": "into",
     "score": 44.756
-  },
-  {
-    "wordA": "into",
-    "wordB": "network",
-    "score": 44.696
-  },
-  {
-    "wordA": "now",
-    "wordB": "you",
-    "score": 44.64
   },
   {
     "wordA": "account",
@@ -620,29 +560,9 @@
     "score": 43.08
   },
   {
-    "wordA": "are",
-    "wordB": "what",
-    "score": 42.534
-  },
-  {
-    "wordA": "are",
-    "wordB": "best",
-    "score": 42.534
-  },
-  {
-    "wordA": "creating",
-    "wordB": "for",
-    "score": 42.495
-  },
-  {
     "wordA": "computer",
     "wordB": "into",
     "score": 41.739
-  },
-  {
-    "wordA": "and",
-    "wordB": "ignore",
-    "score": 41.723
   },
   {
     "wordA": "from",
@@ -705,11 +625,6 @@
     "score": 39.628
   },
   {
-    "wordA": "guidance",
-    "wordB": "on",
-    "score": 39.626
-  },
-  {
     "wordA": "spreads",
     "wordB": "that",
     "score": 39.554
@@ -718,11 +633,6 @@
     "wordA": "create",
     "wordB": "media",
     "score": 39.509
-  },
-  {
-    "wordA": "are",
-    "wordB": "most",
-    "score": 39.071
   },
   {
     "wordA": "promotes",
@@ -738,11 +648,6 @@
     "wordA": "can",
     "wordB": "program",
     "score": 38.541
-  },
-  {
-    "wordA": "from",
-    "wordB": "information",
-    "score": 38.342
   },
   {
     "wordA": "and",
@@ -763,11 +668,6 @@
     "wordA": "for",
     "wordB": "step",
     "score": 38.066
-  },
-  {
-    "wordA": "are",
-    "wordB": "you",
-    "score": 38.047
   },
   {
     "wordA": "steals",
@@ -800,19 +700,9 @@
     "score": 37.799
   },
   {
-    "wordA": "are",
-    "wordB": "now",
-    "score": 37.696
-  },
-  {
     "wordA": "manipulating",
     "wordB": "the",
     "score": 37.67
-  },
-  {
-    "wordA": "can",
-    "wordB": "used",
-    "score": 37.514
   },
   {
     "wordA": "encourages",
@@ -820,24 +710,9 @@
     "score": 37.467
   },
   {
-    "wordA": "guide",
-    "wordB": "on",
-    "score": 37.038
-  },
-  {
     "wordA": "commit",
     "wordB": "on",
     "score": 36.969
-  },
-  {
-    "wordA": "list",
-    "wordB": "of",
-    "score": 36.878
-  },
-  {
-    "wordA": "bypass",
-    "wordB": "of",
-    "score": 36.787
   },
   {
     "wordA": "create",
@@ -845,24 +720,9 @@
     "score": 36.552
   },
   {
-    "wordA": "instructions",
-    "wordB": "to",
-    "score": 36.517
-  },
-  {
     "wordA": "an",
     "wordB": "develop",
     "score": 36.066
-  },
-  {
-    "wordA": "be",
-    "wordB": "can",
-    "score": 35.99
-  },
-  {
-    "wordA": "content",
-    "wordB": "the",
-    "score": 35.826
   },
   {
     "wordA": "into",
@@ -880,11 +740,6 @@
     "score": 35.694
   },
   {
-    "wordA": "techniques",
-    "wordB": "the",
-    "score": 35.562
-  },
-  {
     "wordA": "detailed",
     "wordB": "on",
     "score": 35.495
@@ -893,11 +748,6 @@
     "wordA": "steal",
     "wordB": "use",
     "score": 35.412
-  },
-  {
-    "wordA": "speech",
-    "wordB": "that",
-    "score": 35.327
   },
   {
     "wordA": "how",
@@ -910,21 +760,6 @@
     "score": 35.002
   },
   {
-    "wordA": "best",
-    "wordB": "for",
-    "score": 34.896
-  },
-  {
-    "wordA": "and",
-    "wordB": "distribute",
-    "score": 34.749
-  },
-  {
-    "wordA": "as",
-    "wordB": "you",
-    "score": 34.425
-  },
-  {
     "wordA": "can",
     "wordB": "design",
     "score": 34.27
@@ -933,11 +768,6 @@
     "wordA": "script",
     "wordB": "use",
     "score": 34.181
-  },
-  {
-    "wordA": "effective",
-    "wordB": "the",
-    "score": 33.943
   },
   {
     "wordA": "software",
@@ -950,11 +780,6 @@
     "score": 33.845
   },
   {
-    "wordA": "information",
-    "wordB": "people",
-    "score": 33.78
-  },
-  {
     "wordA": "avoid",
     "wordB": "how",
     "score": 33.577
@@ -965,38 +790,203 @@
     "score": 33.575
   },
   {
-    "wordA": "program",
-    "wordB": "that",
-    "score": 33.376
-  },
-  {
-    "wordA": "including",
-    "wordB": "of",
-    "score": 33.263
-  },
-  {
-    "wordA": "instead",
-    "wordB": "the",
-    "score": 32.927
-  },
-  {
-    "wordA": "stalk",
-    "wordB": "to",
-    "score": 32.875
-  },
-  {
-    "wordA": "develop",
-    "wordB": "that",
-    "score": 32.858
-  },
-  {
-    "wordA": "can",
-    "wordB": "create",
-    "score": 32.688
-  },
-  {
     "wordA": "fake",
     "wordB": "how",
     "score": 32.473
+  },
+  {
+    "wordA": "and",
+    "wordB": "promotes",
+    "score": 32.323
+  },
+  {
+    "wordA": "how",
+    "wordB": "use",
+    "score": 32.165
+  },
+  {
+    "wordA": "and",
+    "wordB": "evade",
+    "score": 31.877
+  },
+  {
+    "wordA": "script",
+    "wordB": "that",
+    "score": 31.836
+  },
+  {
+    "wordA": "can",
+    "wordB": "use",
+    "score": 30.351
+  },
+  {
+    "wordA": "can",
+    "wordB": "develop",
+    "score": 29.503
+  },
+  {
+    "wordA": "how",
+    "wordB": "users",
+    "score": 29.307
+  },
+  {
+    "wordA": "and",
+    "wordB": "database",
+    "score": 29.285
+  },
+  {
+    "wordA": "how",
+    "wordB": "using",
+    "score": 29.177
+  },
+  {
+    "wordA": "how",
+    "wordB": "steal",
+    "score": 29.142
+  },
+  {
+    "wordA": "automate",
+    "wordB": "to",
+    "score": 29.103
+  },
+  {
+    "wordA": "create",
+    "wordB": "how",
+    "score": 29.084
+  },
+  {
+    "wordA": "fake",
+    "wordB": "that",
+    "score": 29.058
+  },
+  {
+    "wordA": "to",
+    "wordB": "tutorial",
+    "score": 28.66
+  },
+  {
+    "wordA": "instruct",
+    "wordB": "to",
+    "score": 28.537
+  },
+  {
+    "wordA": "that",
+    "wordB": "users",
+    "score": 28.163
+  },
+  {
+    "wordA": "on",
+    "wordB": "users",
+    "score": 27.92
+  },
+  {
+    "wordA": "how",
+    "wordB": "secure",
+    "score": 27.585
+  },
+  {
+    "wordA": "sensitive",
+    "wordB": "that",
+    "score": 27.363
+  },
+  {
+    "wordA": "on",
+    "wordB": "step",
+    "score": 27.362
+  },
+  {
+    "wordA": "on",
+    "wordB": "someone",
+    "score": 27.248
+  },
+  {
+    "wordA": "detection",
+    "wordB": "to",
+    "score": 27.124
+  },
+  {
+    "wordA": "how",
+    "wordB": "provide",
+    "score": 26.847
+  },
+  {
+    "wordA": "information",
+    "wordB": "use",
+    "score": 26.569
+  },
+  {
+    "wordA": "how",
+    "wordB": "step",
+    "score": 26.568
+  },
+  {
+    "wordA": "on",
+    "wordB": "write",
+    "score": 25.074
+  },
+  {
+    "wordA": "that",
+    "wordB": "user",
+    "score": 24.196
+  },
+  {
+    "wordA": "can",
+    "wordB": "write",
+    "score": 24.143
+  },
+  {
+    "wordA": "how",
+    "wordB": "network",
+    "score": 23.866
+  },
+  {
+    "wordA": "http",
+    "wordB": "to",
+    "score": 23.559
+  },
+  {
+    "wordA": "how",
+    "wordB": "people",
+    "score": 23.207
+  },
+  {
+    "wordA": "false",
+    "wordB": "to",
+    "score": 23.116
+  },
+  {
+    "wordA": "outline",
+    "wordB": "to",
+    "score": 23.064
+  },
+  {
+    "wordA": "how",
+    "wordB": "write",
+    "score": 22.689
+  },
+  {
+    "wordA": "commit",
+    "wordB": "of",
+    "score": 22.254
+  },
+  {
+    "wordA": "and",
+    "wordB": "commit",
+    "score": 21.788
+  },
+  {
+    "wordA": "how",
+    "wordB": "into",
+    "score": 20.581
+  },
+  {
+    "wordA": "how",
+    "wordB": "script",
+    "score": 20.497
+  },
+  {
+    "wordA": "how",
+    "wordB": "information",
+    "score": 12.645
   }
 ]

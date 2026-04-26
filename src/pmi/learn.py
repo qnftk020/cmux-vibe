@@ -117,9 +117,7 @@ def main():
             continue 
         
         # Noise Filter: Skip if pair appears in normal corpus
-        # Note: We use a stricter check (0 tolerance) to ensure clean signatures
-        if (wordA, wordB) in neg_uni: # This is a simple unigram check for speed, 
-                                     # bigram check is better but more expensive
+        if neg_bi.get((wordA, wordB), 0) > 1:
             continue
 
         score = calculate_score(wordA, wordB, countAB, pos_uni, pos_total, neg_uni, neg_total)
