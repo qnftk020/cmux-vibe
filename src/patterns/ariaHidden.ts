@@ -1,6 +1,6 @@
 import { load } from 'cheerio';
-import type { PatternMatch } from './types.js';
-import { getSelector, loadPatternsFromFile } from './utils.js';
+import type { PatternMatch } from './types';
+import { getSelector, loadPatternsFromFile } from './utils';
 
 const MIN_TEXT_LENGTH = 50;
 

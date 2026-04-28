@@ -1,6 +1,6 @@
 import { load } from 'cheerio';
-import type { PatternMatch } from './types.js';
-import { loadPatternsFromFile } from './utils.js';
+import type { PatternMatch } from './types';
+import { loadPatternsFromFile } from './utils';
 
 const SUSPICIOUS_NAMES = new Set([
   'x-instruction', 'ai-hint', 'agent-prompt', 'llm-instruction',

@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs';
-import { resolve } from 'path';
+import { join } from 'path';
 
 // --- Types ---
 
@@ -80,19 +80,13 @@ let promptsCache: JudgePrompts | null = null;
 
 function loadJudgePrompts(): JudgePrompts | null {
   if (promptsCache) return promptsCache;
-  const candidates = [
-    resolve(process.cwd(), 'data/judge_prompts.json'),
-  ];
-  for (const p of candidates) {
-    try {
-      const raw = JSON.parse(readFileSync(p, 'utf-8'));
-      promptsCache = raw.prompts as JudgePrompts;
-      return promptsCache;
-    } catch {
-      continue;
-    }
+  try {
+    const raw = JSON.parse(readFileSync(join(process.cwd(), 'data', 'judge_prompts.json'), 'utf-8'));
+    promptsCache = raw.prompts as JudgePrompts;
+    return promptsCache;
+  } catch {
+    return null;
   }
-  return null;
 }
 
 /** Layer 2+3 연동을 위한 enriched fragment */

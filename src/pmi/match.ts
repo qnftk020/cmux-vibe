@@ -1,6 +1,5 @@
 import { readFileSync } from 'fs';
-import { resolve, dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { join } from 'path';
 
 export interface PmiSignature {
   wordA: string;
@@ -20,25 +19,14 @@ let signaturesCache: PmiSignature[] | null = null;
 function loadSignatures(): PmiSignature[] {
   if (signaturesCache) return signaturesCache;
 
-  // data/signatures.json 경로 탐색
-  const candidates = [
-    resolve(process.cwd(), 'data/signatures.json'),
-    resolve(dirname(fileURLToPath(import.meta.url)), '../../data/signatures.json'),
-  ];
-
-  for (const p of candidates) {
-    try {
-      const raw = readFileSync(p, 'utf-8');
-      signaturesCache = JSON.parse(raw) as PmiSignature[];
-      return signaturesCache;
-    } catch {
-      continue;
-    }
+  try {
+    const raw = readFileSync(join(process.cwd(), 'data', 'signatures.json'), 'utf-8');
+    signaturesCache = JSON.parse(raw) as PmiSignature[];
+    return signaturesCache;
+  } catch {
+    signaturesCache = [];
+    return signaturesCache;
   }
-
-  // 파일 없으면 빈 배열 (Tier 2 비활성)
-  signaturesCache = [];
-  return signaturesCache;
 }
 
 /** 텍스트를 소문자 토큰으로 분리 (한글+영문, 2자 이상) */

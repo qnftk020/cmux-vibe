@@ -1,4 +1,4 @@
-import { scan } from '../src/scanner.js';
+import { scan } from '../src/scanner';
 
 const testHtml = `<!DOCTYPE html>
 <html>

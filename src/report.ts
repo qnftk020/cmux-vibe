@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import type { ScanResult } from './scanner.js';
+import type { ScanResult } from './scanner';
 
 const RISK_ICONS: Record<ScanResult['riskLevel'], string> = {
   clean: chalk.green('✅ CLEAN'),

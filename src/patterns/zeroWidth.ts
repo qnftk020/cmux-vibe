@@ -1,6 +1,6 @@
 import { load } from 'cheerio';
-import type { PatternMatch } from './types.js';
-import { getSelector } from './utils.js';
+import type { PatternMatch } from './types';
+import { getSelector } from './utils';
 
 const ZW_REGEX = /[\u200B\u200C\u200D\uFEFF\u2060]/g;
 

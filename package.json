@@ -10,7 +10,9 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "scan": "node bin/injectscan.mjs"
+    "typecheck": "tsc --noEmit",
+    "test": "npm run typecheck",
+    "scan": "tsx bin/injectscan.mjs"
   },
   "dependencies": {
     "chalk": "^5.4.1",
@@ -26,6 +28,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }

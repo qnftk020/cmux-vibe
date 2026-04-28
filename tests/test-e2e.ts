@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { existsSync } from 'fs';
-import { fetchPage } from '../src/fetch.js';
-import { scan } from '../src/scanner.js';
+import { fetchPage } from '../src/fetch';
+import { scan } from '../src/scanner';
 
 const HONEYPOT_PATH = 'honeypot/shopping-earbuds/index.html';
 

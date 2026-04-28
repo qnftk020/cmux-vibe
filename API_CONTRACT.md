@@ -170,7 +170,70 @@ export function generateMarkdown(result: ScanResult): string;
 
 ---
 
-## 8. CLI 옵션 (bin/injectscan.mjs)
+## 8. guard.ts — 방어 레이어
+
+```typescript
+// src/guard.ts
+export type GuardPolicy = "warn" | "sanitize" | "block" | "strict";
+export type RiskThreshold = "clean" | "suspicious" | "high" | "critical";
+
+export interface SanitizeResult {
+  html: string;              // 위험 조각이 제거된 HTML
+  text: string;              // AI agent/RAG에 넘길 수 있는 정제 텍스트
+  removedFragments: number;
+  removedPatterns: string[];
+}
+
+export interface GuardResult {
+  url: string;
+  policy: GuardPolicy;
+  blocked: boolean;
+  blockReason: string | null;
+  scan: ScanResult;
+  sanitized: SanitizeResult;
+}
+
+export async function guard(
+  url: string,
+  html: string,
+  options?: {
+    policy?: GuardPolicy;
+    threshold?: RiskThreshold;
+    simulate?: boolean;
+    verbose?: boolean;
+  },
+): Promise<GuardResult>;
+```
+
+### 정책
+
+| policy | 동작 |
+|--------|------|
+| `warn` | 스캔/리포트만 수행 |
+| `sanitize` | 위험 조각 제거 후 safe HTML/text 생성 |
+| `block` | 위험도가 threshold 이상이면 차단 |
+| `strict` | 패턴이 하나라도 나오면 차단 |
+
+HTTP API:
+
+```http
+POST /api/guard
+```
+
+```json
+{
+  "url": "https://example.com",
+  "html": "<html>...</html>",
+  "policy": "sanitize",
+  "threshold": "high"
+}
+```
+
+`url` 또는 `html` 중 하나는 필수입니다. 둘 다 있으면 `html`을 우선 사용합니다.
+
+---
+
+## 9. CLI 옵션 (bin/injectscan.mjs)
 
 ```
 Usage: injectscan [options] <url|file>
@@ -180,6 +243,9 @@ Options:
   -s, --simulate       시뮬레이션 모드 (Tier 2)
   -o, --output <file>  결과를 파일로 저장
   -v, --verbose        상세 로그
+  --sanitize           위험 조각 제거. --output 사용 시 sanitized HTML 저장
+  --policy <policy>    warn|sanitize|block|strict
+  --fail-on <level>    suspicious|high|critical
   -h, --help           도움말
   --version            버전
 ```

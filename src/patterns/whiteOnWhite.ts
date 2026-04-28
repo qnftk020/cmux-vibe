@@ -1,6 +1,6 @@
 import { load } from 'cheerio';
-import type { PatternMatch } from './types.js';
-import { parseStyle, normalizeColor, colorsSimilar, getSelector } from './utils.js';
+import type { PatternMatch } from './types';
+import { parseStyle, normalizeColor, colorsSimilar, getSelector } from './utils';
 
 /** <style> 블록에서 class → {color, background} 맵 추출 */
 function extractClassStyles(html: string): Map<string, Record<string, string>> {

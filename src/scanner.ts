@@ -1,7 +1,7 @@
-import type { PatternMatch } from './patterns/types.js';
-import { ALL_SCANNERS } from './patterns/index.js';
-import { matchPmi, type PmiResult } from './pmi/match.js';
-import { judge, simulate, simulateCanary, hasApiKey, type JudgeResult, type SimResult, type CanaryResult, type EnrichedFragment } from './judge.js';
+import type { PatternMatch } from './patterns/types';
+import { ALL_SCANNERS } from './patterns/index';
+import { matchPmi, type PmiResult } from './pmi/match';
+import { judge, simulate, simulateCanary, hasApiKey, type JudgeResult, type SimResult, type CanaryResult, type EnrichedFragment } from './judge';
 
 export interface ScanOptions {
   json?: boolean;

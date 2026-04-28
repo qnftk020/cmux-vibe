@@ -1,21 +1,21 @@
-export type { PatternMatch, PatternScanner } from './types.js';
+export type { PatternMatch, PatternScanner } from './types';
 
-export { scanWhiteOnWhite } from './whiteOnWhite.js';
-export { scanZeroWidth } from './zeroWidth.js';
-export { scanHiddenCss } from './hiddenCss.js';
-export { scanOffScreen } from './offScreen.js';
-export { scanTinyFont } from './tinyFont.js';
-export { scanMetaTags } from './metaTags.js';
-export { scanAriaHidden } from './ariaHidden.js';
+export { scanWhiteOnWhite } from './whiteOnWhite';
+export { scanZeroWidth } from './zeroWidth';
+export { scanHiddenCss } from './hiddenCss';
+export { scanOffScreen } from './offScreen';
+export { scanTinyFont } from './tinyFont';
+export { scanMetaTags } from './metaTags';
+export { scanAriaHidden } from './ariaHidden';
 
-import type { PatternScanner } from './types.js';
-import { scanWhiteOnWhite } from './whiteOnWhite.js';
-import { scanZeroWidth } from './zeroWidth.js';
-import { scanHiddenCss } from './hiddenCss.js';
-import { scanOffScreen } from './offScreen.js';
-import { scanTinyFont } from './tinyFont.js';
-import { scanMetaTags } from './metaTags.js';
-import { scanAriaHidden } from './ariaHidden.js';
+import type { PatternScanner } from './types';
+import { scanWhiteOnWhite } from './whiteOnWhite';
+import { scanZeroWidth } from './zeroWidth';
+import { scanHiddenCss } from './hiddenCss';
+import { scanOffScreen } from './offScreen';
+import { scanTinyFont } from './tinyFont';
+import { scanMetaTags } from './metaTags';
+import { scanAriaHidden } from './ariaHidden';
 
 /** 전체 7종 패턴 스캐너 배열 */
 export const ALL_SCANNERS: PatternScanner[] = [

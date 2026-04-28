@@ -1,6 +1,6 @@
 import { load } from 'cheerio';
-import type { PatternMatch } from './types.js';
-import { parseStyle, getSelector } from './utils.js';
+import type { PatternMatch } from './types';
+import { parseStyle, getSelector } from './utils';
 
 /**
  * Pattern 5: Tiny Font
